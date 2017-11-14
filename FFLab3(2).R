@@ -39,6 +39,14 @@ FLEX <- rep.int(0,times = 197)
 FLEX[198:200] = rep.int(1, times = 3)
 FLEX_Con <- data.frame(FLEX)
 ################ END OF SETTING UP THE COEFFICIENTS FOR QB, RB, WR, TE, DEF, FLEX #######################
+#we first only had 7 constraints...Once we found our most optimal team, in order to develop
+#other optimal teams we made a new constraint called newTeam whose coefficinets correlated
+#to our most optimal team. We added this constraint to our matrix so that the next team
+#produced was different than the optimal team. We repeated this 9 times, adjusting what the value
+#for the new team should be less than or equal to in order to get different players than the previously 
+#made team
+
+
 NewTeam <- rep.int(0, times = 200)
 NewTeam[2] <- 1
 NewTeam[35] = 1
@@ -55,9 +63,9 @@ Cost <- c(fantasyFootball[,"Cost"])
 f.con <- matrix(c(Cost,  QB,  RB,  WR,  TE,  DEF,  FLEX, NewTeam), nrow = 8, byrow = TRUE)
 f.obj <- Projpoints
 f.dir <- c("<=", "=", "=", "=", "=", "=", "=","<=")
-f.rhs <- c(200, 1, 2, 3, 1, 1, 1,1)
+f.rhs <- c(200, 1, 2, 3, 1, 1, 1,8)  #having the last constraint number be 8 means that our new optimal team should be at least one person different than the original optimal team
 
 LP_Solution <- lp ("max", f.obj, f.con, f.dir, f.rhs,all.bin=T)
 LP_Solution$objval  
 LP_Solution$solution
-Team9 <- data.frame(LP_Solution$solution)
+Team <- data.frame(LP_Solution$solution)

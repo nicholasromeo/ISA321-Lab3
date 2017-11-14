@@ -47,6 +47,14 @@ K1 <- data.frame(K)
 Def1 <- data.frame(Def)
 
 ################ END OF SETTING UP THE COEFFICIENTS FOR QB, RB, WR, TE, DEF, FLEX #######################
+
+
+#we first only had 7 constraints...Once we found our most optimal team, in order to develop
+#other optimal teams we made a new constraint called newTeam whose coefficinets correlated
+#to our most optimal team. We added this constraint to our matrix so that the next team
+#produced was different than the optimal team. We repeated this 4 times, adjusting what the value
+#for the new team should be less than or equal to get different players than the previously made team
+
 newTeam <- rep.int(0,times = 502)
 newTeam[3]= 1
 newTeam[6]=1
@@ -58,12 +66,10 @@ newTeam[219]=1
 newTeam[240]=1
 newTeam[485] =1
 
-
-
 f.con <- matrix(c(Cost,  QB,  RB,  WR,  TE,  Def,  K, newTeam), nrow = 8, byrow = TRUE)
 f.obj <- Points
 f.dir <- c("<=", "=", "=", "=", "=", "=", "=", "<=")
-f.rhs <- c(60000, 1, 2, 3, 1, 1, 1,9)
+f.rhs <- c(60000, 1, 2, 3, 1, 1, 1,8) #having the last constraint number be 8 means that our new optimal team should be at least one person different than the original optimal team
 
 LP_Solution <- lp ("max", f.obj, f.con, f.dir, f.rhs,all.bin=T)
 LP_Solution$objval  
